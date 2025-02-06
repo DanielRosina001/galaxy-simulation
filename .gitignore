@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+test.py
+test1.py
+test2.py
+test3.py
+test4.py
+test5.py
+luminosity_function/
+spiral_sim.nb
+.DS_Store
