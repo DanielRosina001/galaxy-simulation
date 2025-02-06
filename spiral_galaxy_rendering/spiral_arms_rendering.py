@@ -2,19 +2,19 @@ import numpy as np
 import matplotlib.pyplot as plt
 import csv
 
-# Parameters
-mean_main_stars_per_arm = 20000
-num_main_arms = 2
-mean_secondary_stars_per_arm = 1000
-num_secondary_arms = 20
-r0 = 4000.0           # Base radius
-k = 0.23           # Tightness of the spiral
-spiral_distribution = 1200.0   # Scale distribution by spiral arms
-z_distribution = 100.0
-max_theta = 17*np.pi/6
-
 class spiral_arms_render:
-    def __init__(self, mean_main_stars_per_arm, num_main_arms, mean_secondary_stars_per_arm, num_secondary_arms, r0, k, spiral_distribution, z_distribution, max_theta):
+    def __init__(self, # Parameters
+                 mean_main_stars_per_arm = 6000, 
+                 num_main_arms = 2, 
+                 mean_secondary_stars_per_arm = 500, 
+                 num_secondary_arms = 30, 
+                 r0 = 4000.0, # Base radius
+                 k = 0.23, # Tightness of the spiral
+                 spiral_distribution = 1200.0, # Scale distribution by spiral arms
+                 z_distribution = 100.0, 
+                 max_theta = 17*np.pi/6, 
+                 brightness = 2, 
+                 size = 2):
         self.mmspa = mean_main_stars_per_arm
         self.nma = num_main_arms
         self.msspa = mean_secondary_stars_per_arm
@@ -24,40 +24,31 @@ class spiral_arms_render:
         self.spiral_distribution = spiral_distribution
         self.z_distribution = z_distribution
         self.max_theta = max_theta
-        self.x, self.y, self.z = self.generate_all_spiral_arms()
+        self.bright = brightness
+        self.s = size
+        self.x, self.y, self.z, self.temperature, self.brightness, self.size = self.generate_all_spiral_arms()
     
     def logarithmic_spiral(self, theta):
-        """
-        Calculate the radial distance for a logarithmic spiral.
-
-        Parameters:
-            theta (float or array): Angular coordinate in radians.
-            r0 (float): Base radius of the spiral.
-            k (float): Tightness parameter of the spiral.
-
-        Returns:
-            float or array: Radial distance corresponding to theta.
-        """
         return self.r0 * np.exp(self.k * theta)
       
     def generate_main_arms(self):
-        """
-        Generate star positions in spiral arms.
-
-        Returns:
-            tuple: Arrays of x, y, z coordinates of stars. 
-        """
         x = []
         y = []
         z = []
+        temperature = []
+        brightness = []
+        size = []
 
         for arm in range(self.nma): 
             stars_in_arm = self.mmspa + np.int64(np.floor(np.random.normal(0, self.mmspa/10)))
             hotspot_centers, hotspot_sds, max_d = self.hotspot_values_for_arm(np.random.randint(25,35), True)
             arm_theta_offset = (2 * np.pi / self.nma) * arm
+            smoothed_values = self.main_arm_density_array()
             for _ in range(stars_in_arm): 
                 while True: 
-                    theta = (self.max_theta)**0.5 * np.random.uniform(0, self.max_theta)**0.5  # Spiral length (e.g., 2 full rotations)
+                    theta = self.main_arm_random_density(smoothed_values)
+
+                    theta = (self.max_theta)**0.5 * theta**0.5  # Spiral length (e.g., 2 full rotations)
                     
                     if self.density_function_for_arm(hotspot_centers, hotspot_sds, max_d, theta) < np.random.uniform(0,1): 
                         continue
@@ -72,12 +63,21 @@ class spiral_arms_render:
                         continue
                     else: 
                         break
+                x_curr = x_star + np.random.normal(0, self.spiral_distribution/2)
+                y_curr = y_star + np.random.normal(0, self.spiral_distribution/2)
+                z_curr = np.random.normal(0, self.z_distribution/2)
+                #deviation = np.sqrt((x_star - x_curr)**2 + (y_star - y_curr)**2 + (z_curr)**2)
+                temp = np.random.normal(10000, 100)
                 
-                x.append(x_star + np.random.normal(0, self.spiral_distribution/2))
-                y.append(y_star + np.random.normal(0, self.spiral_distribution/2))
-                z.append(np.random.normal(0, self.z_distribution/2))
+                x.append(x_curr)
+                y.append(y_curr)
+                z.append(z_curr)
+                temperature.append(temp)
+                brightness.append(self.bright)
+                size.append(self.s)
+
         
-        return np.array(x), np.array(y), np.array(z)
+        return np.array(x), np.array(y), np.array(z), np.array(temperature), np.array(brightness), np.array(size)
     
     def theta_arm_offset(self): 
         def offset_function(theta): 
@@ -137,14 +137,44 @@ class spiral_arms_render:
 
         return final_density
 
+    def main_arm_density_array(self): 
+        num_points = 10000
+        random_values = np.random.rand(num_points)
+
+        def rect(width=1000):
+            """Rectangular function centered at zero with a specified width."""
+            return np.ones(width) / width
+
+        rect_kernel = rect(1500)
+        smoothed_values = np.convolve(random_values, rect_kernel, mode='same')
+        smoothed_values = smoothed_values[1001:9001]
+        min_s = min(smoothed_values)
+        for i in range(len(smoothed_values)): 
+            smoothed_values[i] -= min_s
+        scale = 1/max(smoothed_values)
+        for i in range(len(smoothed_values)): 
+            smoothed_values[i] *= scale
+
+        return smoothed_values
+    
+    def main_arm_random_density(self, smoothed_values): 
+        while True: 
+            n = np.random.randint(0, 8000)
+            if smoothed_values[n] > np.random.uniform(0,1): 
+                break
+        return n*self.max_theta/8000
+
     def generate_secondary_arms(self): 
         x = []
         y = []
         z = []
+        temperature = []
+        brightness = []
+        size = []
 
         for arm in range(self.nsa): 
             stars_in_arm = self.msspa + np.int64(np.floor(np.random.normal(0, self.msspa/10)))
-            hotspot_centers, hotspot_sds, max_d = self.hotspot_values_for_arm(np.random.randint(1,7), False)
+            hotspot_centers, hotspot_sds, max_d = self.hotspot_values_for_arm(np.random.randint(1,5), False)
             arm_theta_offset = self.theta_arm_offset()
             for _ in range(stars_in_arm): 
                 while True: 
@@ -164,29 +194,35 @@ class spiral_arms_render:
                     else: 
                         break
                 
-                x.append(x_star + np.random.normal(0, self.spiral_distribution/4))
-                y.append(y_star + np.random.normal(0, self.spiral_distribution/4))
-                z.append(np.random.normal(0, self.z_distribution/2))
+                x_curr = x_star + np.random.normal(0, self.spiral_distribution/4)
+                y_curr = y_star + np.random.normal(0, self.spiral_distribution/4)
+                z_curr = np.random.normal(0, self.z_distribution/2)
+                #deviation = np.sqrt((x_star - x_curr)**2 + (y_star - y_curr)**2 + (z_curr)**2)
+                temp = np.random.normal(10000, 100)
+                
+                x.append(x_curr)
+                y.append(y_curr)
+                z.append(z_curr)
+                temperature.append(temp)
+                brightness.append(self.bright)
+                size.append(self.s)
         
-        return np.array(x), np.array(y), np.array(z)
+        return np.array(x), np.array(y), np.array(z), np.array(temperature), np.array(brightness), np.array(size)
     
     def generate_all_spiral_arms(self): 
-        main_x, main_y, main_z = self.generate_main_arms()
-        secondary_x, secondary_y, secondary_z = self.generate_secondary_arms()
+        main_x, main_y, main_z, main_temp, main_bright, main_size = self.generate_main_arms()
+        secondary_x, secondary_y, secondary_z, secondary_temp, secondary_bright, secondary_size = self.generate_secondary_arms()
         
         x = np.concatenate((main_x, secondary_x))
         y = np.concatenate((main_y, secondary_y))
         z = np.concatenate((main_z, secondary_z))
+        temperature = np.concatenate((main_temp, secondary_temp))
+        brightness = np.concatenate((main_bright, secondary_bright))
+        size = np.concatenate((main_size, secondary_size))
 
-        return x, y, z
+        return x, y, z, temperature, brightness, size
 
     def plot_spiral_arms(self):
-        """
-        Plot the spiral arms in 3D.
-
-        Parameters:
-            x, y, z (arrays): Coordinates of stars.
-        """
         fig = plt.figure(figsize=(10, 8))
         ax = fig.add_subplot(111, projection='3d')
         ax.scatter(self.x, self.y, self.z, s=1, alpha=0.2)
@@ -202,17 +238,17 @@ class spiral_arms_render:
     def export(self, output_file = "galaxy_spiral_arms_stars.csv"):
         with open(output_file, mode='w', newline='') as file:
             writer = csv.writer(file)
-            writer.writerow(["x", "y", "z"])
+            writer.writerow(["XX", "YY", "ZZ", "T", "B", "S"])
             for i in range(len(self.x)):
-                writer.writerow([self.x[i], self.y[i], self.z[i]])
+                writer.writerow([self.x[i]/1000, self.y[i]/1000, self.z[i]/1000, self.temperature[i], self.brightness[i], self.size[i]])
 
         print(f"Stars exported to {output_file}")
 
         return output_file
     
 
-spiral_arms = spiral_arms_render(mean_main_stars_per_arm, num_main_arms, mean_secondary_stars_per_arm, num_secondary_arms, r0, k, spiral_distribution, z_distribution, max_theta)
+if __name__ == "__main__":
+    spiral_arms = spiral_arms_render()
 
-spiral_arms.plot_spiral_arms()
-spiral_arms.export()
-            
+    spiral_arms.plot_spiral_arms()
+    spiral_arms.export()

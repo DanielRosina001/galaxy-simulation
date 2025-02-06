@@ -4,19 +4,22 @@ import csv
 from bulge_rendering import bulge_render
 from bar_rendering import bar_render
 from disk_rendering import disk_render
-from spiral_arms_rendering_v2 import spiral_arms_render
+from spiral_arms_rendering import spiral_arms_render
 from scattered_stars_rendering import scattered_stars_render
 
 class SpiralGalaxy:
     def __init__(self, 
                  n_bulge_stars = 3000, # Bulge parameters
                  bulge_radius = 800.0, 
+
                  n_bar_stars = 3000, # Bar parameters
                  bar_length = 8000.0, 
+
                  n_disk_stars = 25000, # Disk parameters
                  r0 = 4000, 
                  scale_height = 600, 
                  cutoff_radius = 31000, 
+
                  mean_main_stars_per_arm = 6000, # Spiral arm parameters
                  num_main_arms = 2, 
                  mean_secondary_stars_per_arm = 500, 
@@ -25,6 +28,7 @@ class SpiralGalaxy:
                  spiral_distribution = 1200.0, 
                  z_distribution = 100.0, 
                  max_theta = 17 * np.pi / 6, 
+                 
                  galaxy_radius = 30000.0, # Scattered stars parameters
                  n_scattered_stars = 100, 
                  min_distance = 30.0

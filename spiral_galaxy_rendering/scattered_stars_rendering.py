@@ -3,15 +3,13 @@ import matplotlib.pyplot as plt
 import csv
 from mpl_toolkits.mplot3d import Axes3D
 
-# Parameters
-galaxy_radius = 30000.0
-num_stars = 100
-min_distance = 30.0
-brightness = 2
-size = 2
-
 class scattered_stars_render: 
-    def __init__(self, galaxy_radius, num_stars, min_distance, brightness, size): 
+    def __init__(self, # Parameters
+                 galaxy_radius = 30000.0, 
+                 num_stars = 100, 
+                 min_distance = 30.0, 
+                 brightness = 2, 
+                 size = 2): 
         self.galaxy_radius = galaxy_radius
         self.num_stars = num_stars
         self.min_distance = min_distance
@@ -69,7 +67,7 @@ class scattered_stars_render:
 
 
 if __name__ == "__main__":
-    scattered_stars = scattered_stars_render(galaxy_radius, num_stars, min_distance, brightness, size)
+    scattered_stars = scattered_stars_render()
 
     scattered_stars.plot_points_in_sphere()
     scattered_stars.export()

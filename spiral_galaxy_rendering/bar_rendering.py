@@ -3,15 +3,14 @@ import matplotlib.pyplot as plt
 import csv
 import scipy
 
-# Parameters
-n_stars = 3000  # Number of stars
-bar_length = 8000.0   # Length scale for the bar tapering
-#bar_dimensions = (1, 0.4, 0.3)
-brightness = 2
-size = 2
-
 class bar_render: 
-    def __init__(self, n_stars, bar_length, brightness, size):
+    def __init__(self, # Parameters
+                 n_stars = 3000, 
+                 bar_length = 8000.0, 
+                 brightness = 2, 
+                 size = 2, 
+                 #bar_dimensions = (1, 0.4, 0.3)
+                 ):
         self.n_stars = n_stars
         self.bar_length = bar_length    
         self.bright = brightness
@@ -78,9 +77,9 @@ class bar_render:
         size = np.zeros(self.n_stars)
 
         for i in range(self.n_stars):
-            x[i] = x[i] + np.random.normal(0, bar_length/100)
-            y[i] = y[i] + np.random.normal(0, bar_length/100)
-            z[i] = z[i] + np.random.normal(0, bar_length/100)
+            x[i] = x[i] + np.random.normal(0, self.bar_length/100)
+            y[i] = y[i] + np.random.normal(0, self.bar_length/100)
+            z[i] = z[i] + np.random.normal(0, self.bar_length/100)
             temp = np.random.normal(4000, 100)
             #while temp < 100: 
             #    temp = np.random.normal(3000, 1000)
@@ -117,7 +116,7 @@ class bar_render:
         print(f"Stars exported to {output_file}")
 
 if __name__ == "__main__":
-    bar = bar_render(n_stars, bar_length, brightness, size)
+    bar = bar_render()
 
     bar.plot_galaxy_bar()
     bar.export()

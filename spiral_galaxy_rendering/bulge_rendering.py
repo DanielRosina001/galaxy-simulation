@@ -3,14 +3,12 @@ import matplotlib.pyplot as plt
 import csv
 import scipy
 
-# Parameters
-n_stars = 3000  # Number of stars in the bulge
-bulge_radius = 800.0  # Radius of bulge
-brightness = 2
-size = 2
-
 class bulge_render: 
-    def __init__(self, n_stars, bulge_radius, brightness, size):
+    def __init__(self, # Parameters
+                 n_stars = 3000, 
+                 bulge_radius = 800.0, 
+                 brightness = 2, 
+                 size = 2):
         self.n_stars = n_stars
         self.bulge_radius = bulge_radius 
         self.bright = brightness
@@ -90,7 +88,7 @@ class bulge_render:
 
 
 if __name__ == "__main__":
-    bulge = bulge_render(n_stars, bulge_radius, brightness, size)
+    bulge = bulge_render()
 
     bulge.plot_galaxy_bulge()
     bulge.export()

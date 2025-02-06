@@ -2,25 +2,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 import csv
 
-# Parameters
-num_stars = 25000    # Total number of stars
-r0 = 4000   # Scale length for the radial density
-scale_height = 600    # Scale height for the z-distribution
-cutoff_radius = 31000 # Maximum radius of the galactic disk
-brightness = 2
-size = 2
-'''
-# Generate galactic disk stars
-x, y, z = generate_galactic_disk(num_stars, r0, scale_height, cutoff_radius)
-
-# Plot the galactic disk
-plot_galactic_disk(x, y, z)
-
-# Export stars to a CSV file
-'''
-
 class disk_render:
-    def __init__(self, num_stars, r0, scale_height, cutoff_radius, brightness, size): 
+    def __init__(self, # Parameters
+                 num_stars = 25000, # Total number of stars
+                 r0 = 4000, # Scale length for the radial density
+                 scale_height = 600, # Scale height for the z-distribution
+                 cutoff_radius = 31000, # Maximum radius of the galactic disk
+                 brightness = 2, 
+                 size = 2): 
         self.num_stars = num_stars
         self.r0 = r0
         self.scale_height = scale_height
@@ -118,7 +107,7 @@ class disk_render:
     
 
 if __name__ == "__main__":
-    disk = disk_render(num_stars, r0, scale_height, cutoff_radius, brightness, size)
+    disk = disk_render()
 
     disk.plot_galactic_disk()
     disk.export()
