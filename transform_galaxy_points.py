@@ -2,7 +2,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 import csv
-import scipy
 
 galaxy = pd.read_csv('galaxy_stars.csv')
 center_location = np.load('galaxy_center_locations.npy')

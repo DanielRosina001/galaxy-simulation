@@ -4,7 +4,8 @@ import pandas as pd
 import scipy
 from colour_rendering.temp_to_rgb import temp_to_rgb
 
-class SmearedGalaxy(): 
+class SmearedGalaxy: 
+
     def __init__(self, input_file, pixels, kernel_size=15, kernel_sd=2, normalization='none', log_factor=50, gamma=0.4): 
         self.stars = pd.read_csv(input_file)
         self.pixels = pixels
@@ -42,7 +43,7 @@ class SmearedGalaxy():
         
         self.gaussian_smearing = self.gaussian_kernel(kernel_size, kernel_sd)
         
-    def smear_grid(self): 
+    def smear_grid(self) -> None: 
         self.convolved_grid = scipy.signal.convolve2d(self.grid, self.gaussian_smearing, mode='same', boundary='symm')
         convolved_channels = [
             scipy.ndimage.convolve(self.color_grid[:, :, i], self.gaussian_smearing, mode='reflect') 
@@ -63,7 +64,7 @@ class SmearedGalaxy():
         kernel = np.exp(-(X**2 + Y**2) / (2 * sigma**2))
         return 1.2*kernel / kernel.sum()  # Normalize the kernel
     
-    def plot(self, color=True): 
+    def plot(self, color: bool =True): 
         plt.figure(figsize=(10, 5))
 
         plt.subplot(1, 2, 1)
@@ -86,7 +87,7 @@ class SmearedGalaxy():
         plt.show()
 
 if __name__ == '__main__': 
-    galaxy = SmearedGalaxy(input_file='spiral_galaxy_stars_current_2.csv', 
+    galaxy = SmearedGalaxy(input_file='examples/spiral_galaxy_stars.csv', 
                            pixels=1024, 
                            kernel_size=10, 
                            kernel_sd=0.5, 

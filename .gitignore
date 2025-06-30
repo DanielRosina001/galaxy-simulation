@@ -6,5 +6,9 @@ mypy.ini
 *test*
 luminosity_function/
 spiral_sim.nb
+colours.py
+smearing.py
+galaxy_center_locations.py
+transform_galaxy_points.py
 examples/
 example_render.py
