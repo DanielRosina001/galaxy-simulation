@@ -38,7 +38,6 @@ class SpiralGalaxy:
 
 
     def __post_init__(self) -> None: 
-
         print('\n------------- SPIRAL GALAXY GENERATION ------------\n')
 
         # Bulge parameters
@@ -55,8 +54,6 @@ class SpiralGalaxy:
 
         # Scattered stars parameters
         self.scattered_stars_parameters = self.config.scattered_stars_parameters
-
-
 
     def generate_galaxy(self) -> None: 
 
@@ -78,9 +75,9 @@ class SpiralGalaxy:
         self.S = np.concatenate([self.bulge.S, self.bar.S, self.disk.S, self.spiral_arms.S, self.scattered_stars.S])
 
         self.df = pd.DataFrame({
-            'XX': self.XX/1000, 
-            'YY': self.YY/1000, 
-            'ZZ': self.ZZ/1000, 
+            'XX': self.XX, 
+            'YY': self.YY, 
+            'ZZ': self.ZZ, 
             'T': self.T, 
             'B': self.B, 
             'S': self.S
@@ -100,10 +97,16 @@ class SpiralGalaxy:
 
         print(f"Stars exported to {output_path}")
 
-if __name__ == "__main__":
+
+def main(): 
     spiral_galaxy = SpiralGalaxy()
 
     spiral_galaxy.generate_galaxy()
     spiral_galaxy.render()
 
-    spiral_galaxy.export()
+    e = input("Export stars? (y/n): ")
+    if e.lower() == 'y': 
+        spiral_galaxy.export()
+
+if __name__ == "__main__":
+    main()

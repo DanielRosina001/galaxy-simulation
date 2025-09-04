@@ -18,7 +18,7 @@ class Disk:
 
     n_stars: int = field(init=False)
     r0: float = field(init=False)
-    scale_height: float = field(init=False)
+    norm_height: float = field(init=False)
     thin_height: float = field(init=False)
     cutoff_radius: float = field(init=False)
     temp_mean: float = field(init=False)
@@ -38,7 +38,7 @@ class Disk:
 
         self.n_stars = self.parameters.n_stars
         self.r0 = self.parameters.r0
-        self.scale_height = self.parameters.scale_height
+        self.norm_height = self.parameters.norm_height
         self.thin_height = self.parameters.thin_height
         self.cutoff_radius = self.parameters.cutoff_radius
         self.temp_mean = self.parameters.temp_mean
@@ -50,13 +50,20 @@ class Disk:
 
         self.XX, self.YY, self.ZZ, self.T, self.B, self.S = self.generate_galaxy_disk()
         self.df = pd.DataFrame({
-            'XX': self.XX/1000, 
-            'YY': self.YY/1000, 
-            'ZZ': self.ZZ/1000, 
+            'XX': self.XX, 
+            'YY': self.YY, 
+            'ZZ': self.ZZ, 
             'T': self.T, 
             'B': self.B, 
             'S': self.S
         })
+
+    # def __generate_point_its(self) -> tuple[np.float64, np.float64, np.float64]: 
+    #     """
+    #     Generate a random point within the 3D space according to the density function through inverse transform sampling
+    #     """
+    #     # Sample phi uniformly
+    #     phi = np.random.uniform(0, 2*np.pi, size=N)
     
     def generate_galaxy_disk(self) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
         """
@@ -64,12 +71,10 @@ class Disk:
 
         Parameters:
             n_stars (int): Total number of stars to generate.
-            scale_length (float): Scale length for the radial density distribution (in same units as cutoff_radius).
-            scale_height (float): Scale height for the vertical distribution (standard deviation of z-coordinates).
+            r0 (float): Scale length for the radial density distribution (in same units as cutoff_radius).
+            norm_height (float): Scale height for standard vertical distribution (standard deviation of z-coordinates).
+            thin_height (float): Scale height for thin vertical distribution (standard deviation of z-coordinates).
             cutoff_radius (float): Maximum radial extent of the disk.
-
-        Returns:
-            tuple: Arrays of x, y, z coordinates of stars.
         """
         x = []
         y = []
@@ -84,10 +89,9 @@ class Disk:
         max_attempts = 1000  # Maximum attempts per star to prevent infinite loops
         
         n_thick_stars = int(self.n_stars * 0.9)
-        n_thin_stars = int(self.n_stars * 0.1)
         while i < self.n_stars:
             if i < n_thick_stars: 
-                scale_height = self.scale_height
+                scale_height = self.norm_height
             else: 
                 scale_height = self.thin_height
             attempts = 0
@@ -111,7 +115,7 @@ class Disk:
                 y_star = r * np.sin(theta)
 
             # Generate z-coordinate from a Gaussian distribution
-            z_star = np.random.normal(0, self.scale_height/2)
+            z_star = np.random.normal(0, scale_height/2)
 
             x.append(x_star)
             y.append(y_star)
@@ -145,9 +149,14 @@ class Disk:
         print(f"Stars exported to {output_path}")
     
 
-if __name__ == "__main__":
+def main(): 
     disk = Disk(default_disk_parameters)
 
     disk.render()
-    # disk.export()
+    
+    e = input("Export stars? (y/n): ")
+    if e.lower() == 'y': 
+        disk.export()
 
+if __name__ == "__main__":
+    main()

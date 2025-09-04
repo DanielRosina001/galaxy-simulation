@@ -42,9 +42,9 @@ class Bulge:
 
         self.XX, self.YY, self.ZZ, self.T, self.B, self.S = self.generate_galaxy_bulge()
         self.df = pd.DataFrame({
-            'XX': self.XX/1000, 
-            'YY': self.YY/1000, 
-            'ZZ': self.ZZ/1000, 
+            'XX': self.XX, 
+            'YY': self.YY, 
+            'ZZ': self.ZZ, 
             'T': self.T, 
             'B': self.B, 
             'S': self.S
@@ -114,9 +114,14 @@ class Bulge:
         print(f"Stars exported to {output_path}")
 
 
-if __name__ == "__main__":
-
+def main(): 
     bulge = Bulge(default_bulge_parameters)
 
     bulge.render()
-    # bulge.export()
+    
+    e = input("Export stars? (y/n): ")
+    if e.lower() == 'y': 
+        bulge.export()
+
+if __name__ == "__main__":
+    main()

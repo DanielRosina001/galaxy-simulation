@@ -45,9 +45,9 @@ class Bar:
 
         self.XX, self.YY, self.ZZ, self.T, self.B, self.S = self.generate_galaxy_bar()
         self.df = pd.DataFrame({
-            'XX': self.XX/1000, 
-            'YY': self.YY/1000, 
-            'ZZ': self.ZZ/1000, 
+            'XX': self.XX, 
+            'YY': self.YY, 
+            'ZZ': self.ZZ, 
             'T': self.T, 
             'B': self.B, 
             'S': self.S
@@ -140,9 +140,15 @@ class Bar:
 
         print(f"Stars exported to {output_path}")
 
-if __name__ == "__main__":
+
+def main(): 
     bar = Bar(default_bar_parameters)
 
     bar.render()
-    # bar.export()
+    
+    e = input("Export stars? (y/n): ")
+    if e.lower() == 'y': 
+        bar.export()
 
+if __name__ == "__main__":
+    main()

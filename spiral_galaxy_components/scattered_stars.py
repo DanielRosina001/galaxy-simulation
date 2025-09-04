@@ -45,9 +45,9 @@ class ScatteredStars:
 
         self.XX, self.YY, self.ZZ, self.T, self.B, self.S = self.generate_scattered_stars()
         self.df = pd.DataFrame({
-            'XX': self.XX/1000, 
-            'YY': self.YY/1000, 
-            'ZZ': self.ZZ/1000, 
+            'XX': self.XX, 
+            'YY': self.YY, 
+            'ZZ': self.ZZ, 
             'T': self.T, 
             'B': self.B, 
             'S': self.S
@@ -67,7 +67,7 @@ class ScatteredStars:
             phi = np.random.uniform(0, 2 * np.pi)
             cos_theta = np.random.uniform(-1, 1)
             theta = np.arccos(cos_theta)
-            r = np.random.normal(40000, 13333)
+            r = np.random.normal(4/3 * self.galaxy_radius, 4/9 * self.galaxy_radius)
             x_c = r * np.sin(theta) * np.cos(phi)
             y_c = r * np.sin(theta) * np.sin(phi)
             z_c = r * np.cos(theta)
@@ -100,11 +100,14 @@ class ScatteredStars:
         print(f"Stars exported to {output_path}")
 
 
-if __name__ == "__main__":
+def main(): 
     scattered_stars = ScatteredStars(default_scattered_stars_parameters)
 
     scattered_stars.render()
-    # scattered_stars.export()
 
+    e = input("Export stars? (y/n): ")
+    if e.lower() == 'y': 
+        scattered_stars.export()
 
-
+if __name__ == "__main__":
+    main()

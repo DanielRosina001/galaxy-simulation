@@ -4,11 +4,9 @@ __pycache__/
 mypy.ini
 .DS_Store
 *test*
-luminosity_function/
-spiral_sim.nb
-colours.py
 smearing.py
 galaxy_center_locations.py
 transform_galaxy_points.py
 examples/
 example_render.py
+spiral_galaxy_components/spiral_arms_old.py

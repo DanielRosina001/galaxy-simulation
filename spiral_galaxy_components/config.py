@@ -1,6 +1,6 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
-@dataclass
+@dataclass(frozen=True)
 class BulgeParameters: 
     n_stars: int
     bulge_radius: float
@@ -10,8 +10,8 @@ class BulgeParameters:
     size: float
 
 default_bulge_parameters: BulgeParameters = BulgeParameters(
-    n_stars=3000, 
-    bulge_radius=800.0, 
+    n_stars=5000, 
+    bulge_radius=0.8, 
     temp_mean=3000.0, 
     temp_sd=500.0, 
     brightness=2.0, 
@@ -19,7 +19,7 @@ default_bulge_parameters: BulgeParameters = BulgeParameters(
 )
 
 
-@dataclass
+@dataclass(frozen=True)
 class BarParameters: 
     n_stars: int
     bar_length: float
@@ -29,8 +29,8 @@ class BarParameters:
     size: float
 
 default_bar_parameters: BarParameters = BarParameters(
-    n_stars=5000, 
-    bar_length=8000.0, 
+    n_stars=10000, 
+    bar_length=8.0, 
     temp_mean=4500.0, 
     temp_sd=500.0, 
     brightness=2.0, 
@@ -38,11 +38,11 @@ default_bar_parameters: BarParameters = BarParameters(
 )
 
 
-@dataclass
+@dataclass(frozen=True)
 class DiskParameters: 
     n_stars: int
     r0: float
-    scale_height: float
+    norm_height: float
     thin_height: float
     cutoff_radius: float
     temp_mean: float
@@ -51,11 +51,11 @@ class DiskParameters:
     size: float
 
 default_disk_parameters: DiskParameters = DiskParameters(
-    n_stars=15000, 
-    r0=4000.0, 
-    scale_height=600.0, 
-    thin_height=100.0, 
-    cutoff_radius=31000.0, 
+    n_stars=35000, 
+    r0=5.0, 
+    norm_height=0.6, 
+    thin_height=0.1, 
+    cutoff_radius=31.0, 
     temp_mean=6000.0, 
     temp_sd=500.0, 
     brightness=2.0, 
@@ -63,11 +63,11 @@ default_disk_parameters: DiskParameters = DiskParameters(
 )
 
 
-@dataclass
+@dataclass(frozen=True)
 class SpiralArmParameters: 
-    mean_main_stars_per_arm: int
-    num_main_amrs: int
-    mean_secondary_stars_per_arm: int
+    n_stars: int
+    star_prop: tuple[float]
+    num_main_arms: int
     num_secondary_arms: int
     r0: float
     k: float
@@ -80,14 +80,14 @@ class SpiralArmParameters:
     size: float
 
 default_spiral_arm_parameters: SpiralArmParameters = SpiralArmParameters(
-    mean_main_stars_per_arm=6000,
-    num_main_amrs=2, 
-    mean_secondary_stars_per_arm=500, 
+    n_stars=49000, 
+    star_prop=(0.4,0.6), 
+    num_main_arms=2, 
     num_secondary_arms=30, 
-    r0=4000.0, 
+    r0=4.0, 
     k=0.23, 
-    spiral_distribution=1200.0, 
-    z_distribution=100.0, 
+    spiral_distribution=1.2, 
+    z_distribution=0.1, 
     max_theta=8.90118, # 17*pi/6 
     temp_mean=9000.0, 
     temp_sd=1500.0, 
@@ -96,7 +96,7 @@ default_spiral_arm_parameters: SpiralArmParameters = SpiralArmParameters(
 )
 
 
-@dataclass
+@dataclass(frozen=True)
 class ScatteredStarParameters: 
     n_stars: int
     galaxy_radius: float
@@ -107,9 +107,9 @@ class ScatteredStarParameters:
     size: float
 
 default_scattered_stars_parameters: ScatteredStarParameters = ScatteredStarParameters(
-    n_stars=500, 
-    galaxy_radius=30000.0, 
-    min_distance=30.0, 
+    n_stars=1000, 
+    galaxy_radius=30.0, 
+    min_distance=0.03, 
     temp_mean=6000.0, 
     temp_sd=2000.0, 
     brightness=2.0, 
@@ -117,7 +117,7 @@ default_scattered_stars_parameters: ScatteredStarParameters = ScatteredStarParam
 )
 
 
-@dataclass
+@dataclass(frozen=True)
 class SpiralGalaxyConfig: 
     bulge_parameters: BulgeParameters
     bar_parameters: BarParameters

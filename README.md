@@ -9,7 +9,7 @@ This program uses probability distributions and established properties of real-l
 ```bash
 # To generate the CSV file, make sure spiral_galaxy.export() is called in the script
 # To automatically render the galaxy after generation, make sure spiral_galaxy.render() is called in the script
-python3 spiral_galaxy_rendering.py
+python3 spiral_galaxy.py
 
 ------------- SPIRAL GALAXY GENERATION ------------
 ... 
