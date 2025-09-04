@@ -8,8 +8,6 @@ from dataclasses import dataclass, field
 from spiral_galaxy_components.config import SpiralArmParameters, default_spiral_arm_parameters
 from spiral_galaxy_components.helper import *
 
-import time
-
 
 @dataclass
 class SpiralArms:
@@ -31,13 +29,13 @@ class SpiralArms:
     brightness: float = field(init=False)
     size: float = field(init=False)
 
-    XX: np.ndarray = field(init=False) # Units: pc
-    YY: np.ndarray = field(init=False) # Units: pc
-    ZZ: np.ndarray = field(init=False) # Units: pc
+    XX: np.ndarray = field(init=False) 
+    YY: np.ndarray = field(init=False) 
+    ZZ: np.ndarray = field(init=False) 
     T: np.ndarray = field(init=False)
     B: np.ndarray = field(init=False)
     S: np.ndarray = field(init=False)
-    df: pd.DataFrame = field(init=False) # Units: kpc
+    df: pd.DataFrame = field(init=False) 
 
     def __post_init__(self) -> None: 
 
@@ -142,14 +140,9 @@ class SpiralArms:
         y_all = []
         z_all = []
 
-        main_times: np.ndarray = np.zeros(self.num_main_arms)
-        secondary_times: np.ndarray = np.zeros(self.num_secondary_arms)
-
         print(f"\nGenerating {self.num_main_arms} main spiral arms...")
 
         for i in range(self.num_main_arms):
-
-            start_time = time.time()
 
             stars_in_arm = num_main_stars_ls[i]
             theta_offset = main_theta_offsets[i]
@@ -160,20 +153,13 @@ class SpiralArms:
             y_all.extend(list(y))
             z_all.extend(list(z))
 
-            main_times[i] = time.time() - start_time
-
             pbar.update(1)
 
         pbar.close()
 
-        print(f"Average time per arm: {np.mean(main_times):.2f} seconds")
-        print(f"Total time taken: {np.sum(main_times):.2f} seconds")
-
         print(f"\nGenerating {self.num_secondary_arms} main spiral arms...")
 
         for i in range(self.num_secondary_arms):
-
-            start_time = time.time()
 
             stars_in_arm = num_secondary_stars_ls[i]
             theta_offset = secondary_theta_offsets[i]
@@ -184,14 +170,9 @@ class SpiralArms:
             y_all.extend(list(y))
             z_all.extend(list(z))
 
-            secondary_times[i] = time.time() - start_time
-
             pbar.update(1)
 
         pbar.close()
-
-        print(f"Average time per arm: {np.mean(main_times):.2f} seconds")
-        print(f"Total time taken: {np.sum(main_times):.2f} seconds")
 
         print("\nCombining all spiral arms...\n")
         

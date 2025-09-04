@@ -26,13 +26,13 @@ class Disk:
     brightness: float = field(init=False)
     size: float = field(init=False)
 
-    XX: np.ndarray = field(init=False) # Units: pc
-    YY: np.ndarray = field(init=False) # Units: pc
-    ZZ: np.ndarray = field(init=False) # Units: pc
+    XX: np.ndarray = field(init=False) 
+    YY: np.ndarray = field(init=False) 
+    ZZ: np.ndarray = field(init=False) 
     T: np.ndarray = field(init=False)
     B: np.ndarray = field(init=False)
     S: np.ndarray = field(init=False)
-    df: pd.DataFrame = field(init=False) # Units: kpc
+    df: pd.DataFrame = field(init=False) 
 
     def __post_init__(self) -> None: 
 

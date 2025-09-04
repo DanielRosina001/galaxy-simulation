@@ -1,4 +1,4 @@
-# Galaxy_Simulation_Project
+# Galaxy Simulation Project
 ## A program that can generate simulated galaxies using star values stored in a CSV file
 This program uses probability distributions and established properties of real-life galaxies to generate points in a simulated one, containing features that real ones would have such as the disk, bulge, and randomly scattered stars. Running this program would generate a CSV file with 6 columns: XX, YY, ZZ, T, B, S. XX, YY, ZZ refer to the (x,y,z) coordinates of the given star in kpc. T refers to the temperature of the star in Kelvin, B refers to the brightness of the star, and S refers to the star's size. 
 

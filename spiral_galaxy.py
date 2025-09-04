@@ -14,7 +14,7 @@ from spiral_galaxy_components.config import *
 @dataclass
 class SpiralGalaxy:
 
-    config: SpiralGalaxyConfig = field(default_factory=lambda: deepcopy(default_config)) # Copy of default_config
+    config: SpiralGalaxyConfig = field(default_factory=lambda: deepcopy(default_config))
 
     bulge_parameters: BulgeParameters = field(init=False)
     bar_parameters: BarParameters = field(init=False)
@@ -28,13 +28,13 @@ class SpiralGalaxy:
     spiral_arms: SpiralArms = field(init=False)
     scattered_stars: ScatteredStars = field(init=False)
 
-    XX: np.ndarray = field(init=False) # Units: pc
-    YY: np.ndarray = field(init=False) # Units: pc
-    ZZ: np.ndarray = field(init=False) # Units: pc
+    XX: np.ndarray = field(init=False) 
+    YY: np.ndarray = field(init=False) 
+    ZZ: np.ndarray = field(init=False) 
     T: np.ndarray = field(init=False)
     B: np.ndarray = field(init=False)
     S: np.ndarray = field(init=False)
-    df: pd.DataFrame = field(init=False) # Units: kpc
+    df: pd.DataFrame = field(init=False) 
 
 
     def __post_init__(self) -> None: 
